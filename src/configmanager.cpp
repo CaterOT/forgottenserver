@@ -19,7 +19,11 @@
 
 #include "otpch.h"
 
+#if __has_include("luajit/lua.hpp")
+#include <luajit/lua.hpp>
+#else
 #include <lua.hpp>
+#endif
 
 #include "configmanager.h"
 #include "game.h"
@@ -118,6 +122,23 @@ bool ConfigManager::load()
 		integer[STATUS_PORT] = getGlobalNumber(L, "statusProtocolPort", 7171);
 
 		integer[MARKET_OFFER_DURATION] = getGlobalNumber(L, "marketOfferDuration", 30 * 24 * 60 * 60);
+
+		// Load proxy list
+		string[PROXY_LIST] = getGlobalString(L, "proxyList", "");
+		StringVector proxies = explodeString(string[PROXY_LIST], ";");
+		for (const std::string& proxyInfo : proxies) {
+			StringVector info = explodeString(proxyInfo, ",");
+			if (info.size() == 4) {
+				const std::string& ip = info[1];
+				const std::string& name = info[3];
+				uint16_t proxyId = std::stoi(info[0]);
+				uint16_t port = std::stoi(info[2]);
+				auto it = proxyList.emplace(std::piecewise_construct, std::forward_as_tuple(proxyId), std::forward_as_tuple(ip, port, name));
+				if (it.second) {
+					std::cout << "> Loaded proxy with id: " << proxyId << ", ip: " << ip << ", port: " << port << ", name: " << name << std::endl;
+				}
+			}
+		}
 	}
 
 	boolean[ALLOW_CHANGEOUTFIT] = getGlobalBoolean(L, "allowChangeOutfit", true);
@@ -229,4 +250,16 @@ bool ConfigManager::getBoolean(boolean_config_t what) const
 		return false;
 	}
 	return boolean[what];
+}
+
+bool ConfigManager::getProxyInfo(uint16_t proxyId, ProxyInfo& proxyInfo) {
+	auto it = proxyList.find(proxyId);
+	if (it == proxyList.end()) {
+		return false;
+	}
+
+	proxyInfo.ip = it->second.ip;
+	proxyInfo.port = it->second.port;
+	proxyInfo.name = it->second.name;
+	return true;
 }

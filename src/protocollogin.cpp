@@ -101,9 +101,19 @@ void ProtocolLogin::getCharacterList(const std::string& accountName, const std::
 	} else {
 		output->addByte(1); // number of worlds
 		output->addByte(0); // world id
-		output->addString(g_config.getString(ConfigManager::SERVER_NAME));
-		output->addString(g_config.getString(ConfigManager::IP));
-		output->add<uint16_t>(g_config.getNumber(ConfigManager::GAME_PORT));
+		ConfigManager::ProxyInfo proxy;
+		bool useProxy = g_config.getProxyInfo(account.proxyId, proxy);
+		if (useProxy) {
+			std::ostringstream ss;
+			ss << g_config.getString(ConfigManager::SERVER_NAME) << " - " << proxy.name;
+			output->addString(ss.str());
+			output->addString(proxy.ip);
+			output->add<uint16_t>(proxy.port);
+		} else {
+			output->addString(g_config.getString(ConfigManager::SERVER_NAME));
+			output->addString(g_config.getString(ConfigManager::IP));
+			output->add<uint16_t>(g_config.getNumber(ConfigManager::GAME_PORT));
+		}
 		output->addByte(0);
 	}
 

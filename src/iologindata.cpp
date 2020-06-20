@@ -86,7 +86,7 @@ bool IOLoginData::loginserverAuthentication(const std::string& name, const std::
 	Database& db = Database::getInstance();
 
 	std::ostringstream query;
-	query << "SELECT `id`, `name`, `password`, `secret`, `type`, `premdays`, `lastday` FROM `accounts` WHERE `name` = " << db.escapeString(name);
+	query << "SELECT `id`, `name`, `password`, `secret`, `type`, `premdays`, `lastday`, `proxy_id` FROM `accounts` WHERE `name` = " << db.escapeString(name);
 	DBResult_ptr result = db.storeQuery(query.str());
 	if (!result) {
 		return false;
@@ -102,6 +102,7 @@ bool IOLoginData::loginserverAuthentication(const std::string& name, const std::
 	account.accountType = static_cast<AccountType_t>(result->getNumber<int32_t>("type"));
 	account.premiumDays = result->getNumber<uint16_t>("premdays");
 	account.lastDay = result->getNumber<time_t>("lastday");
+	account.proxyId = result->getNumber<uint16_t>("proxy_id");
 
 	query.str(std::string());
 	query << "SELECT `name`, `deletion` FROM `players` WHERE `account_id` = " << account.id;

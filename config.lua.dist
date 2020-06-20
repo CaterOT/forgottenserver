@@ -125,3 +125,6 @@ ownerName = ""
 ownerEmail = ""
 url = "https://otland.net/"
 location = "Sweden"
+
+-- Proxy List
+proxyList = "1,158.69.12.0,7000,USA;2,0.0.0.0,7000,BRA"

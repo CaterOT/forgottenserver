@@ -23,6 +23,15 @@
 class ConfigManager
 {
 	public:
+		struct ProxyInfo {
+			std::string ip;
+			uint16_t port;
+			std::string name;
+
+			ProxyInfo() : ip(""), port(0), name("") {}
+			ProxyInfo(const std::string& ip, uint16_t port, const std::string& name) : ip(ip), port(port), name(name) {}
+		};
+
 		enum boolean_config_t {
 			ALLOW_CHANGEOUTFIT,
 			ONE_PLAYER_ON_ACCOUNT,
@@ -77,6 +86,7 @@ class ConfigManager
 			MYSQL_SOCK,
 			DEFAULT_PRIORITY,
 			MAP_AUTHOR,
+			PROXY_LIST,
 
 			LAST_STRING_CONFIG /* this must be the last one */
 		};
@@ -125,11 +135,13 @@ class ConfigManager
 		const std::string& getString(string_config_t what) const;
 		int32_t getNumber(integer_config_t what) const;
 		bool getBoolean(boolean_config_t what) const;
+		bool getProxyInfo(uint16_t proxyId, ProxyInfo& proxyInfo);
 
 	private:
 		std::string string[LAST_STRING_CONFIG] = {};
 		int32_t integer[LAST_INTEGER_CONFIG] = {};
 		bool boolean[LAST_BOOLEAN_CONFIG] = {};
+		std::map<uint16_t, ProxyInfo> proxyList;
 
 		bool loaded = false;
 };
