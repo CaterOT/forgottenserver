@@ -18,7 +18,7 @@ expFromPlayersLevelRange = 75
 
 -- Connection Config
 -- NOTE: maxPlayers set to 0 means no limit
-ip = "127.0.0.1"
+ip = "142.44.162.177"
 bindOnlyGlobalAddress = false
 loginProtocolPort = 7171
 gameProtocolPort = 7172
@@ -63,8 +63,8 @@ maxMarketOffersAtATimePerPlayer = 100
 -- MySQL
 mysqlHost = "127.0.0.1"
 mysqlUser = "forgottenserver"
-mysqlPass = ""
-mysqlDatabase = "forgottenserver"
+mysqlPass = "root"
+mysqlDatabase = ""
 mysqlPort = 3306
 mysqlSock = ""
 
@@ -127,4 +127,4 @@ url = "https://otland.net/"
 location = "Sweden"
 
 -- Proxy List
-proxyList = "1,158.69.12.0,7000,USA;2,0.0.0.0,7000,BRA"
+proxyList = "1,191.235.73.60,7000,BRA"
